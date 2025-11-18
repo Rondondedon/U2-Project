@@ -10,12 +10,12 @@ public class Gamering
         System.out.println("Your character starts with 25 hp, and heals fully after each encounter. Dying loses the game");
         System.out.println("How many encounters would you like to face? 3 is fit for beginners, while 5 and more is quite hard");
         int encounters = playerResponse.nextInt();
-        System.out.println(encounters);
 
+        //monster stat generation
         for (int i = 1; i <= encounters; i++)
         {
-            int monsterHealth = (int) Math.random() * 20 + 1;
-            int monsterAttack = (int) Math.random() * 5 + 1;
+            int monsterHealth = (int) Math.random() * 7 + 14;
+            int monsterAttack = (int) Math.random() * 3 + 3;
             int monsterRand = (int) (Math.random() * 3) + 1;
             String monsterType = "";
             String monsterDescription = "";
@@ -39,12 +39,19 @@ public class Gamering
             System.out.println("In encounter number " + i + " you face is against a " + monsterType);
             System.out.println(monsterDescription);
 
+            //fight sequence
             for (int hp = monsterHealth; hp >= 0;)
             {
-int attackChance = (int) (Math.random() * 5) * 25;
-
+                int attackChance = (int) (Math.random() * 4) * 25 + 25;
+                System.out.println("The monster has a " + attackChance + "% chance of attacking this turn");
+                System.out.println("Will you attack or defend? Type 1 to attack, or 2 to defend");
+                int turnAction = playerResponse.nextInt();
+                if (turnAction == 1);
+                {
+                    System.out.println("You deal 4 damage to the monster");
+                }
             }
         }
-        System.out.println("You've survived all encounters, you win!!");
+        System.out.println("You've survived all encounters, you win!11!1!!!");
     }
 }
