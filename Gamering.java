@@ -11,12 +11,14 @@ public class Gamering
         System.out.println("How many encounters would you like to face? 3 is fit for beginners, while 5 and more is quite hard");
         int encounters = playerResponse.nextInt();
 
+
         //monster stat generation
         for (int i = 1; i <= encounters; i++)
         {
             int monsterHealth = (int) Math.random() * 7 + 14;
             int monsterAttack = (int) Math.random() * 3 + 3;
             int monsterRand = (int) (Math.random() * 3) + 1;
+            int playerHealth = 25;
             String monsterType = "";
             String monsterDescription = "";
             if (monsterRand == 1)
@@ -39,16 +41,40 @@ public class Gamering
             System.out.println("In encounter number " + i + " you face is against a " + monsterType);
             System.out.println(monsterDescription);
 
+
             //fight sequence
             for (int hp = monsterHealth; hp >= 0;)
             {
                 int attackChance = (int) (Math.random() * 4) * 25 + 25;
                 System.out.println("The monster has a " + attackChance + "% chance of attacking this turn");
+                if (attackChance == 25)
+                {
+                    boolean attacking = (attackChance / 25 * Math.random() * Math.random()) > 0.249;
+                }if (attackChance == 50)
+                {
+                    boolean attacking = (attackChance / 25 * Math.random()) > 1;
+                }if (attackChance == 75)
+                {
+                    boolean attacking = (attackChance / 25 * Math.random() * Math.random()) > 0.;
+                }else
+                {
+                    boolean attacking = true;
+                }
                 System.out.println("Will you attack or defend? Type 1 to attack, or 2 to defend");
                 int turnAction = playerResponse.nextInt();
-                if (turnAction == 1);
+                if (turnAction == 1)
                 {
                     System.out.println("You deal 4 damage to the monster");
+                    monsterHealth -= 4;
+                    System.out.println(monsterType + "'s hp: " + monsterHealth);
+
+
+                }
+                if (turnAction == 2 && attacking == true)
+                {
+                    System.out.println("The monster does 1 damage to you");
+                    playerHealth -= 1;
+                    System.out.println("Your hp: " + playerHealth);
                 }
             }
         }
