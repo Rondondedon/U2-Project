@@ -1,6 +1,8 @@
-import java.util.Scanner;
-public class Main {
-    public static void main(String[] args) {
-Gamering.gameStart();
+public class Main
+{
+    public static void main(String[] args)
+    {
+     Gamering.startGame();
     }
 }
+
