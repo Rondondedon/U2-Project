@@ -6,14 +6,18 @@ public class Gamering
         Scanner playerResponse = new Scanner(System.in);
 
         //player balancing
-        int playerHealth = 100;
-        int defendMax = 5;
+        int playerHealth = 90;
+        int defendMax = 2;
+
+
 
         //yapping
         System.out.println("This game requires you to survive x encounters with enemies in-order to win");
         System.out.println("Each turn you can choose to either attack or defend");
         System.out.println("Defending negates all but 5 damage, and attacking does 20 damage to the enemy");
-        System.out.println("You can only defend " + defendMax + " times in a row before needing to attack");
+        System.out.println("Parrying allows you to reflect 50~% of the enemy's attack back onto them, avoiding all damage");
+        System.out.println("But if the monster doesn't attack during the parry, you take full damage next turn");
+        System.out.println("You can only defend " + defendMax + " times in a row before needing to attack or parry");
         System.out.println("Your character starts with " + playerHealth + " hp, and heals fully after each encounter");
         System.out.println();
         System.out.println("Dying loses the game.");
@@ -55,6 +59,8 @@ public class Gamering
                 monsterAttack += 10;
             }
 
+
+
             //encounter start details
             System.out.println("Encounters remaining: " + (encounters - i));
             System.out.println("In encounter number " + i + " you face against a " + monsterType);
@@ -68,23 +74,42 @@ public class Gamering
 
 
             //fight sequence
-            for (int hp = monsterHealth; hp > 0 && playerAlive;)
+            for (;monsterHealth > 0 && playerAlive;)
             {
-                int attackChance = (int) (Math.random() * 5) * 25;
+
+
+
+                //implementation of attack chances
+                int attackPossibility = (int) (Math.random() * 5);
+                int attackChance = 0;
+
+                if (attackPossibility == 1)
+                {
+                    attackChance = 20;
+                }else if (attackPossibility == 2)
+                {
+                    attackChance = 50;
+                }else if (attackPossibility == 3)
+                {
+                    attackChance = 80;
+                }else if (attackPossibility == 4)
+                {
+                    attackChance = 100;
+                }
+
                 System.out.println();
                 System.out.println("The monster has a " + attackChance + "% chance of attacking this turn");
                 boolean attacking = false;
 
-                //implementation of attack chances
-                if (attackChance == 25)
+                if (attackChance == 20)
                 {
-                    attacking = Math.random() > 0.75;
+                    attacking = Math.random() > 0.80;
                 }else if (attackChance == 50)
                 {
                     attacking = Math.random() > 0.5;
-                }else if (attackChance == 75)
+                }else if (attackChance == 80)
                 {
-                    attacking = Math.random() > 0.25;
+                    attacking = Math.random() > 0.2;
                 }else if (attackChance == 100)
                 {
                     attacking = true;
@@ -95,26 +120,27 @@ public class Gamering
                 //player action
                 if (defenseCount < defendMax)
                 {
-                    System.out.println("Will you attack or defend? Type 1 to attack, or 2 to defend");
+                    System.out.println("Will you attack or defend? Type 1 to attack, 2 to defend, or 3 to parry");
                     turnAction = playerResponse.nextInt();
                     System.out.println();
 
                     //cheeky-game-breaker curbing
-                    for (; turnAction != 1 && turnAction != 2;)
+                    for (; turnAction != 1 && turnAction != 2 && turnAction != 3;)
                     {
                         System.out.println("              why.");
                         System.out.println();
-                        System.out.println("Type 1 to attack, or 2 to defend");
+                        System.out.println("Type 1 to attack, 2 to defend, or 3 to parry");
                         turnAction = playerResponse.nextInt();
                         System.out.println();
                     }
+
+
 
                     //player immediately attacks
                     if (turnAction == 1)
                     {
                         System.out.println("You deal 20 damage to the monster");
                         monsterHealth -= 20;
-                        hp = monsterHealth;
                         System.out.println(monsterType + "'s current hp: " + monsterHealth);
                         defenseCount = 0;
                     }
@@ -127,13 +153,20 @@ public class Gamering
                             System.out.println(", dealing " + monsterAttack + " damage");
                             playerHealth -= monsterAttack;
                             System.out.println("Your current hp: " + playerHealth);
-                        }
-                        if (turnAction == 2) {
+                        }if (turnAction == 2) {
                             System.out.println();
                             System.out.println("But since you defended, the monster only does 5 damage to you");
                             playerHealth -= 5;
                             System.out.println("Your current hp: " + playerHealth);
                             defenseCount++;
+                        }if (turnAction == 3)
+                        {
+                            System.out.println();
+                            System.out.println("But because you parried in time, the monster loses hp equal to its own attack");
+                            monsterHealth -= monsterAttack / 2;
+                            System.out.println(monsterType + "'s current hp: " + monsterHealth);
+                            System.out.println("Your hp: " + playerHealth);
+                            defenseCount = 0;
                         }
                     } else if (!attacking)
                     {
@@ -143,34 +176,43 @@ public class Gamering
                         {
                             defenseCount++;
                         }
+                        if (turnAction == 3)
+                        {
+                            System.out.println();
+                            System.out.println("But because you missed your parry, you are attacked next turn");
+                            playerHealth -= monsterAttack;
+                            System.out.println("Your current hp: " + playerHealth);
+                            defenseCount = 0;
+                        }
                     }
                     System.out.println("Times defended in a row: " + defenseCount);
                 }
 
 
 
-                //defended more than 5 times
+                //defended more than x times
                 else
                 {
-                    System.out.println("You can no longer defend anymore, press 1 to attack");
+                    System.out.println("You can no longer defend anymore, press 1 to attack or 3 to parry");
                     turnAction = playerResponse.nextInt();
 
                     //cheeky-game-breaker curbing 2
-                    for (; turnAction != 1;)
+                    for (; turnAction != 1 && turnAction != 3;)
                     {
                         System.out.println("      why.");
                         System.out.println();
-                        System.out.println("Type 1 to attack");
+                        System.out.println("Type 1 to attack, or 3 to parry");
                         turnAction = playerResponse.nextInt();
                         System.out.println();
                     }
+
+
 
                     //player immediately attacks
                     if (turnAction == 1)
                     {
                         System.out.println("You deal 20 damage to the monster");
                         monsterHealth -= 20;
-                        hp = monsterHealth;
                         System.out.println(monsterType + "'s current hp: " + monsterHealth);
                         defenseCount = 0;
                     }
@@ -179,15 +221,33 @@ public class Gamering
                     if (attacking && monsterHealth > 0)
                     {
                         System.out.print("The " + monsterType + " succeeds in launching an attack");
-                        if (turnAction == 1) {
+                        if (turnAction == 1)
+                        {
                             System.out.println(", dealing " + monsterAttack + " damage");
                             playerHealth -= monsterAttack;
                             System.out.println("Your current hp: " + playerHealth);
+                        }
+                        if (turnAction == 3)
+                        {
+                            System.out.println();
+                            System.out.println("But because you parried in time, the monster loses hp equal to its own attack");
+                            monsterHealth -= monsterAttack / 2;
+                            System.out.println(monsterType + "'s current hp: " + monsterHealth);
+                            System.out.println("Your hp: " + playerHealth);
+                            defenseCount = 0;
                         }
                     } else if (!attacking)
                     {
                         System.out.println("The monster doesn't attack");
                         System.out.println("Your hp: " + playerHealth);
+                        if (turnAction == 3)
+                        {
+                            System.out.println();
+                            System.out.println("But because you missed your parry, you are attacked next turn");
+                            playerHealth -= monsterAttack;
+                            System.out.println("Your current hp: " + playerHealth);
+                            defenseCount = 0;
+                        }
                     }
                     defenseCount = 0;
                     System.out.println("Times defended in a row: " + defenseCount);
